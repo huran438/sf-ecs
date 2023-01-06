@@ -1,0 +1,20 @@
+{
+    "name": "SFramework.ECS.Editor",
+    "rootNamespace": "SFramework.ECS.Editor",
+    "references": [
+        "SFramework.Core.Runtime",
+        "SFramework.Core.Editor",
+        "SFramework.ECS.Runtime"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
