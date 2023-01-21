@@ -8,26 +8,19 @@ namespace SFramework.ECS.Runtime
     [DisallowMultipleComponent]
     public sealed class SFEntity : SFView, ISFEntity
     {
-        public EcsWorld World => _world;
-        public EcsPackedEntity EcsPackedEntity => _ecsPackedEntity;
-        public int EcsEntity => _ecsUnpackedEntity;
+        public EcsPackedEntityWithWorld EcsPackedEntity => _ecsPackedEntity;
 
         [SFInject]
         private ISFWorldsService _worldsService;
-
-        private EcsPackedEntity _ecsPackedEntity;
-        private int _ecsUnpackedEntity;
-        private EcsWorld _world;
+        private EcsPackedEntityWithWorld _ecsPackedEntity;
         private bool _injected;
-
-        private ISFEntitySetup[] _cachedComponents;
+        private ISFEntitySetup[] _components;
         private bool _activated;
 
         protected override void Init()
         {
             if (_injected) return;
-            _world = _worldsService.Default;
-            _cachedComponents = GetComponents<ISFEntitySetup>();
+            _components = GetComponents<ISFEntitySetup>();
             Activate();
             _injected = true;
         }
@@ -38,31 +31,26 @@ namespace SFramework.ECS.Runtime
 
             gameObject.SetActive(true);
 
-            var _entity = _world.NewEntity();
-            _ecsPackedEntity = _world.PackEntity(_entity);
-            _ecsUnpackedEntity = _entity;
+            var _entity = _worldsService.Default.NewEntity();
+            _ecsPackedEntity = _worldsService.Default.PackEntityWithWorld(_entity);
 
-            SFEntityMappingService.AddMapping(gameObject, ref _ecsPackedEntity);
+            SFEntityMapping.AddMapping(gameObject, ref _ecsPackedEntity);
 
-            _world.GetPool<GameObjectRef>().Add(_entity) = new GameObjectRef
+            _worldsService.Default.GetPool<GameObjectRef>().Add(_entity) = new GameObjectRef
             {
-                reference = gameObject,
-                entity = this
+                value = gameObject
             };
 
             var _transform = transform;
 
-            _world.GetPool<TransformRef>().Add(_entity) = new TransformRef
+            _worldsService.Default.GetPool<TransformRef>().Add(_entity) = new TransformRef
             {
-                reference = _transform,
-                initialPosition = _transform.position,
-                initialRotation = _transform.rotation,
-                initialScale = _transform.localScale
+                value = _transform
             };
 
-            foreach (var entitySetup in _cachedComponents)
+            foreach (var entitySetup in _components)
             {
-                entitySetup.Setup(ref _world, ref _ecsUnpackedEntity, ref _ecsPackedEntity);
+                entitySetup.Setup(ref _ecsPackedEntity);
             }
 
             _activated = true;
@@ -70,9 +58,9 @@ namespace SFramework.ECS.Runtime
 
         public void Deactivate()
         {
-            SFEntityMappingService.RemoveMapping(gameObject);
+            SFEntityMapping.RemoveMapping(gameObject);
 
-            if (_ecsPackedEntity.Unpack(_world, out var _entity))
+            if (_ecsPackedEntity.Unpack(out var _world, out var _entity))
                 _world.DelEntity(_entity);
 
             gameObject.SetActive(false);

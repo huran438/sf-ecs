@@ -3,7 +3,7 @@ using SFramework.Core.Runtime;
 
 namespace SFramework.ECS.Runtime
 {
-    public abstract class SFEcsSystem : IEcsInitSystem, IEcsRunSystem ,ISFInjectable
+    public abstract class SFECSSystem : IEcsInitSystem, IEcsRunSystem ,ISFInjectable
     {
         public void Init(IEcsSystems systems)
         {

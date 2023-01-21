@@ -11,26 +11,19 @@ namespace SFramework.ECS.Runtime
         [SerializeField]
         private T _value;
 
-        private EcsPackedEntity _packedEntity;
-        private EcsWorld _world;
+        public ref T Value => ref _value;
 
-        public ref T value => ref _value;
-        protected EcsPackedEntity PackedEntity => _packedEntity;
-        protected EcsWorld World => _world;
-
-        public bool DontDestroy => false;
-
-        public void Setup(ref EcsWorld world, ref int entity, ref EcsPackedEntity packedEntity)
+        public void Setup(ref EcsPackedEntityWithWorld packedEntity)
         {
-            _world = world;
-            _packedEntity = packedEntity;
-
             if (_value is IEcsAutoInit<T> value)
             {
                 value.AutoInit(ref _value);
             }
 
-            world.GetPool<T>().Add(entity) = _value;
+            if (packedEntity.Unpack(out var world, out var entity))
+            {
+                world.GetPool<T>().Add(entity) = _value;
+            }
         }
     }
 }

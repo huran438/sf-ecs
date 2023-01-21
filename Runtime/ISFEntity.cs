@@ -4,9 +4,7 @@ namespace SFramework.ECS.Runtime
 {
     public interface ISFEntity
     {
-        EcsWorld World { get; }
-        EcsPackedEntity EcsPackedEntity { get; }
-
+        EcsPackedEntityWithWorld EcsPackedEntity { get; }
         void Activate();
         void Deactivate();
     }

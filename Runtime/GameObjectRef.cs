@@ -2,9 +2,8 @@
 
 namespace SFramework.ECS.Runtime
 {
-    public struct GameObjectRef
+    public struct GameObjectRef : ISFComponent
     {
-        public GameObject reference;
-        public ISFEntity entity;
+        public GameObject value;
     }
 }
