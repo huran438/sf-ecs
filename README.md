@@ -2,8 +2,6 @@
 
 # SF ECS
 
-[Documentation website](https://docs.secretplace.studio/#sf-ecs)
-
 Unity authoring components, GameObject-to-entity mapping, and a worlds service for **LeoECS Lite** in SFramework.
 
 ![Package version](https://img.shields.io/badge/package-0.1.0-334155) ![License](https://img.shields.io/badge/license-MIT-334155)
